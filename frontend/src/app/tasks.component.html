@@ -1,0 +1,71 @@
+<div style="max-width: 800px; margin: 40px auto; font-family: sans-serif; padding: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 8px; border: 1px solid #eaeaea; background-color: white;">
+  <!-- Header Row -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h1 style="margin: 0;">Task Manager</h1>
+    <button (click)="logout()" style="padding: 8px 15px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">
+      Logout
+    </button>
+  </div>
+  
+  <!-- Filter Dropdown -->
+  <div style="margin-bottom: 20px; text-align: right;">
+    <label style="margin-right: 10px; font-weight: bold; font-size: 14px;">Filter by Priority:</label>
+    <select #filterSelect (change)="filterPriority.set(filterSelect.value)" style="padding: 5px; border-radius: 4px;">
+      <option value="All">All</option>
+      <option value="Low">Low</option>
+      <option value="Medium">Medium</option>
+      <option value="High">High</option>
+    </select>
+  </div>
+
+  <!-- Add Task Input with Priority Selection -->
+  <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+    <input #taskTitle type="text" placeholder="Add a new task..." (keyup.enter)="addTask(taskTitle.value, prioritySelect.value); taskTitle.value=''" style="flex-grow: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+    
+    <select #prioritySelect style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+      <option value="Low">Low</option>
+      <option value="Medium" selected>Medium</option>
+      <option value="High">High</option>
+    </select>
+
+    <button (click)="addTask(taskTitle.value, prioritySelect.value); taskTitle.value=''" style="padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; border-radius: 4px;">Add</button>
+  </div>
+
+  <hr style="border: 0; border-top: 1px solid #eaeaea; margin-bottom: 20px;">
+
+  <!-- Loop through filteredTasks() -->
+  <ul style="list-style: none; padding: 0;">
+    @for (task of filteredTasks(); track task.id) {
+      <li style="padding: 15px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;" [style.opacity]="task.status === 'Done' ? '0.5' : '1'">
+        
+        <div>
+          <h3 style="margin: 0 0 5px 0; display: flex; align-items: center;">
+            <span [style.textDecoration]="task.status === 'Done' ? 'line-through' : 'none'">
+              {{ task.title }}
+            </span> 
+            
+            <span style="font-size: 12px; font-weight: normal; background: #f4f4f4; padding: 3px 8px; border-radius: 12px; margin-left: 8px; border: 1px solid #ddd;">
+              {{ task.status }}
+            </span>
+          </h3>
+          <small [style.color]="task.priority === 'High' ? '#dc3545' : (task.priority === 'Medium' ? '#fd7e14' : '#28a745')" style="font-weight: 600;">
+            Priority: {{ task.priority }}
+          </small>
+        </div>
+
+        <div style="display: flex; gap: 8px;">
+          <button (click)="updateStatus(task)" style="color: white; background: #28a745; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px; width: 70px;">
+            {{ task.status === 'Todo' ? 'Done' : 'Undo' }}
+          </button>
+          
+          <button (click)="deleteTask(task.id)" style="color: white; background: #dc3545; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px;">Delete</button>
+        </div>
+
+      </li>
+    } @empty {
+      <li style="padding: 30px; text-align: center; color: #999; background: #fcfcfc; border-radius: 8px; border: 1px dashed #ccc;">
+        No tasks match this filter.
+      </li>
+    }
+  </ul>
+</div>
