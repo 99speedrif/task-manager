@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: taskmanager-config
+data:
+  DB_NAME: "taskmanagerdb"
+  DB_USER: "postgres"
